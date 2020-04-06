@@ -14,7 +14,7 @@ def pair(count,count_pair):
 
 def sockMerchant(n,ar):
 	count = 0
-	count_pair = 0;
+	count_pair = 0
 	ar.sort()
 	aux = ar[0]
 	print(ar)
