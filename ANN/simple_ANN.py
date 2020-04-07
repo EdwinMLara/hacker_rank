@@ -1,4 +1,5 @@
 import numpy as np
+import plotly.graph_objects as go
 
 inputs = np.array([[0, 1, 0],
                    [0, 1, 1],
@@ -17,30 +18,29 @@ class NeuralNetwork:
         self.weights = np.array([[.50], [.50], [.50]])
         self.error_history = []
         self.epoch_list = []
-        self.hidden = []
     
-    def sigmoid(self,x,deriv=False):
-        if deriv:
+    def sigmoid(self,x,deriv):
+        if deriv == True:
             return x * (1-x)
-        return 1 / np.exp(x)
+        return 1 / (1 + np.exp(-x))
 
     def feed_forward(self):
-        self.hidden = self.sigmoid(np.dot(self.inputs,self.weights))
+        self.hidden = self.sigmoid(np.dot(self.inputs,self.weights),False)
 
     def backpropagation(self):
         self.error = self.outputs - self.hidden
         delta = self.error * self.sigmoid(self.hidden, True)
         self.weights += np.dot(self.inputs.T,delta)
 
-    def train(self,epochs = 500):
+    def train(self,epochs = 25000):
         for epoch in range(epochs):
             self.feed_forward()
             self.backpropagation()
-            self.error_history.append(np.abs(self.error))
+            self.error_history.append(np.average(np.abs(self.error)))
             self.epoch_list.append(epoch)
 
     def predict(self,new_input):
-        prediction = self.sigmoid(new_input,self.weights)
+        prediction = self.sigmoid(np.dot(new_input,self.weights),False)
         return prediction
 
 
@@ -50,5 +50,9 @@ NN.train()
 example = np.array([[1, 1, 0]])
 example_2 = np.array([[0, 1, 1]])
                                    
-print(NN.predict(example), ' - Correct: ')
-print(NN.predict(example_2), ' - Correct: ')
+print(NN.predict(example), ' - Correct: ',example[0][0])
+print(NN.predict(example_2), ' - Correct: ',example_2[0][0])
+
+print(NN.hidden)
+#fig = go.Figure(data=go.Scatter(x=NN.epoch_list, y=NN.error_history))
+#fig.show()
