@@ -19,20 +19,20 @@ class NeuralNetwork:
         self.epoch_list = []
         self.hidden = []
     
-    def sigmoid(self,x,deriv=False):
+    def sigmoid(self,x,deriv):
         if deriv == True:
             return x * (1-x)
-        return 1 / np.exp(x)
+        return 1 / (1 + np.exp(x))
 
     def feed_forward(self):
-        self.hidden = self.sigmoid(np.dot(self.inputs,self.weights))
+        self.hidden = self.sigmoid(np.dot(self.inputs,self.weights),False)
 
     def backpropagation(self):
         self.error = self.outputs - self.hidden
-        delta = self.error * self.sigmoid(self.hidden, deriv=True)
+        delta = self.error * self.sigmoid(self.hidden,True)
         self.weights += np.dot(self.inputs.T,delta)
 
-    def train(self,epochs = 2500):
+    def train(self,epochs = 25000):
         for epoch in range(epochs):
             self.feed_forward()
             self.backpropagation()
@@ -40,7 +40,7 @@ class NeuralNetwork:
             self.epoch_list.append(epoch)
 
     def predict(self,new_input):
-        prediction = self.sigmoid(new_input,self.weights)
+        prediction = self.sigmoid(np.dot(new_input,self.weights),False)
         return prediction
 
 
