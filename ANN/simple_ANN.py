@@ -20,7 +20,7 @@ class NeuralNetwork:
         self.hidden = []
     
     def sigmoid(self,x,deriv=False):
-        if deriv == True:
+        if deriv:
             return x * (1-x)
         return 1 / np.exp(x)
 
@@ -29,10 +29,10 @@ class NeuralNetwork:
 
     def backpropagation(self):
         self.error = self.outputs - self.hidden
-        delta = self.error * self.sigmoid(self.hidden, deriv=True)
+        delta = self.error * self.sigmoid(self.hidden, True)
         self.weights += np.dot(self.inputs.T,delta)
 
-    def train(self,epochs = 2500):
+    def train(self,epochs = 500):
         for epoch in range(epochs):
             self.feed_forward()
             self.backpropagation()
@@ -50,5 +50,5 @@ NN.train()
 example = np.array([[1, 1, 0]])
 example_2 = np.array([[0, 1, 1]])
                                    
-print(NN.predict(example), ' - Correct: ', example[0][0])
-print(NN.predict(example_2), ' - Correct: ', example_2[0][0])
+print(NN.predict(example), ' - Correct: ')
+print(NN.predict(example_2), ' - Correct: ')
